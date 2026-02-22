@@ -1,0 +1,25 @@
+
+   INFO  Seeding database.  
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[42S22]: Column not found: 1054 Unknown column 'model' in 'field list' (Connection: mysql, Host: 127.0.0.1, Port: 3306, Database: pearltropuganda, SQL: insert into `cars` (`name`, `brand`, `model`, `year`, `description`, `price_per_day`, `is_available`, `updated_at`, `created_at`) values (eos labore, Mercedes, autem, 2019, A impedit enim saepe corporis repellendus. Voluptatum similique cupiditate molestiae dolorum ex. Velit voluptas ab qui recusandae. Autem vitae doloribus nulla possimus dolores., 482.76, 1, 2026-02-22 20:56:44, 2026-02-22 20:56:44))
+
+  at vendor\laravel\framework\src\Illuminate\Database\Connection.php:838
+    834???             $exceptionType = $this->isUniqueConstraintError($e)
+    835???                 ? UniqueConstraintViolationException::class
+    836???                 : QueryException::class;
+    837??? 
+  ??? 838???             throw new $exceptionType(
+    839???                 $this->getNameWithReadWriteType(),
+    840???                 $query,
+    841???                 $this->prepareBindings($bindings),
+    842???                 $e,
+
+  1   vendor\laravel\framework\src\Illuminate\Database\MySqlConnection.php:47
+      PDOException::("SQLSTATE[42S22]: Column not found: 1054 Unknown column 'model' in 'field list'")
+
+  2   vendor\laravel\framework\src\Illuminate\Database\MySqlConnection.php:47
+      PDO::prepare("insert into `cars` (`name`, `brand`, `model`, `year`, `description`, `price_per_day`, `is_available`, `updated_at`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?)")
+
