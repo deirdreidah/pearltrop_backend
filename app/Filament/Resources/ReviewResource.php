@@ -7,8 +7,10 @@ use App\Models\Review;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components as Schemas;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Actions;
 
 class ReviewResource extends Resource
 {
@@ -22,7 +24,7 @@ class ReviewResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Review Details')
+                Schemas\Section::make('Review Details')
                     ->schema([
                         Forms\Components\Select::make('user_id')
                             ->relationship('user', 'name')
@@ -72,11 +74,12 @@ class ReviewResource extends Resource
                     ]),
             ])
             ->actions([
-                Tables\Actions\DeleteAction::make(),
+                Actions\ViewAction::make()->iconButton()->tooltip('View Review'),
+                Actions\DeleteAction::make()->iconButton()->tooltip('Delete Review'),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

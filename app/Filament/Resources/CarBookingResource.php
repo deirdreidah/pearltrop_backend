@@ -7,8 +7,10 @@ use App\Models\CarBooking;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components as Schemas;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Actions;
 
 class CarBookingResource extends Resource
 {
@@ -22,7 +24,7 @@ class CarBookingResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Booking Information')
+                Schemas\Section::make('Booking Information')
                     ->schema([
                         Forms\Components\Select::make('user_id')
                             ->relationship('user', 'name')
@@ -99,12 +101,13 @@ class CarBookingResource extends Resource
                     ->relationship('car', 'name'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Actions\ViewAction::make()->iconButton()->tooltip('View Booking'),
+                Actions\EditAction::make()->iconButton()->tooltip('Edit Booking'),
+                Actions\DeleteAction::make()->iconButton()->tooltip('Delete Booking'),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

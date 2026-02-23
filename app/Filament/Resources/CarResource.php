@@ -7,8 +7,10 @@ use App\Models\Car;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components as Schemas;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Actions;
 
 class CarResource extends Resource
 {
@@ -22,7 +24,7 @@ class CarResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Car Details')
+                Schemas\Section::make('Car Details')
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->required()
@@ -38,7 +40,7 @@ class CarResource extends Resource
                             ->required(),
                     ])->columns(2),
 
-                Forms\Components\Section::make('Pricing & Availability')
+                Schemas\Section::make('Pricing & Availability')
                     ->schema([
                         Forms\Components\TextInput::make('price_per_day')
                             ->numeric()
@@ -86,12 +88,13 @@ class CarResource extends Resource
                 Tables\Filters\TernaryFilter::make('is_available'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Actions\ViewAction::make()->iconButton()->tooltip('View Car'),
+                Actions\EditAction::make()->iconButton()->tooltip('Edit Car'),
+                Actions\DeleteAction::make()->iconButton()->tooltip('Delete Car'),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

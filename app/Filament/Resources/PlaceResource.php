@@ -7,8 +7,10 @@ use App\Models\Place;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components as Schemas;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Actions;
 
 class PlaceResource extends Resource
 {
@@ -22,7 +24,7 @@ class PlaceResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Place Details')
+                Schemas\Section::make('Place Details')
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->required()
@@ -77,12 +79,13 @@ class PlaceResource extends Resource
                     ]),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Actions\ViewAction::make()->iconButton()->tooltip('View Place'),
+                Actions\EditAction::make()->iconButton()->tooltip('Edit Place'),
+                Actions\DeleteAction::make()->iconButton()->tooltip('Delete Place'),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

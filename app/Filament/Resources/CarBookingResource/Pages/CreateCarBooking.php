@@ -9,4 +9,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateCarBooking extends CreateRecord
 {
     protected static string $resource = CarBookingResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }
