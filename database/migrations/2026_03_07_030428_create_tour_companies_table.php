@@ -11,13 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('places', function (Blueprint $table) {
+        Schema::create('tour_companies', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('location');
+            $table->string('email')->unique()->nullable();
+            $table->string('phone');
+            $table->string('website')->nullable();
+            $table->text('address')->nullable();
             $table->text('description')->nullable();
-            $table->string('image_path')->nullable();
-            $table->string('category')->nullable(); // Nature, Cultural, etc.
+            $table->string('logo')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('places');
+        Schema::dropIfExists('tour_companies');
     }
 };

@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Filament\Resources\CarBookingResource\Pages;
+namespace App\Filament\Resources\TourCompanyResource\Pages;
 
-use App\Filament\Resources\CarBookingResource;
+use App\Filament\Resources\TourCompanyResource;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
-class CreateCarBooking extends CreateRecord
+class CreateTourCompany extends CreateRecord
 {
-    protected static string $resource = CarBookingResource::class;
+    protected static string $resource = TourCompanyResource::class;
 
     protected function handleRecordCreation(array $data): \Illuminate\Database\Eloquent\Model
     {
-        $response = (new \App\Services\CarBookingService())->create($data);
+        $response = (new \App\Services\TourCompanyService())->create($data);
         if (!$response->success) {
             \Filament\Notifications\Notification::make()
-                ->title('Error creating booking')
+                ->title('Error creating tour company')
                 ->body($response->message)
                 ->danger()
                 ->send();

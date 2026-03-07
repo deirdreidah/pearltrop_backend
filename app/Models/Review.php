@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property int $id
  * @property int $user_id
- * @property int $place_id
+ * @property int $accommodation_id
  * @property int $rating
  * @property string $comment
  * @property \Illuminate\Support\Carbon $created_at
@@ -26,8 +26,8 @@ class Review extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function place(): BelongsTo
+    public function accommodation(): BelongsTo
     {
-        return $this->belongsTo(Place::class);
+        return $this->belongsTo(Accommodation::class);
     }
 }

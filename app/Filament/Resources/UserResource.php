@@ -74,7 +74,24 @@ class UserResource extends Resource
             ->actions([
                 Actions\ViewAction::make()->iconButton()->tooltip('View User'),
                 Actions\EditAction::make()->iconButton()->tooltip('Edit User'),
-                Actions\DeleteAction::make()->iconButton()->tooltip('Delete User'),
+                Actions\DeleteAction::make()
+                    ->iconButton()
+                    ->tooltip('Delete User')
+                    ->action(function (\App\Models\User $record) {
+                        $response = (new \App\Services\UserService())->delete($record);
+                        if (!$response->success) {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Error deleting user')
+                                ->body($response->message)
+                                ->danger()
+                                ->send();
+                        } else {
+                            \Filament\Notifications\Notification::make()
+                                ->title('User deleted successfully')
+                                ->success()
+                                ->send();
+                        }
+                    }),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([

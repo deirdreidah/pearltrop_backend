@@ -40,7 +40,7 @@ class CarBookingResource extends Resource
                             ->required(),
                         Forms\Components\TextInput::make('total_price')
                             ->numeric()
-                            ->prefix('$')
+                            ->prefix('UGX')
                             ->required(),
                         Forms\Components\Select::make('status')
                             ->options([
@@ -73,7 +73,7 @@ class CarBookingResource extends Resource
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('total_price')
-                    ->money()
+                    ->money('UGX')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
@@ -103,7 +103,24 @@ class CarBookingResource extends Resource
             ->actions([
                 Actions\ViewAction::make()->iconButton()->tooltip('View Booking'),
                 Actions\EditAction::make()->iconButton()->tooltip('Edit Booking'),
-                Actions\DeleteAction::make()->iconButton()->tooltip('Delete Booking'),
+                Actions\DeleteAction::make()
+                    ->iconButton()
+                    ->tooltip('Delete Booking')
+                    ->action(function (CarBooking $record) {
+                        $response = (new \App\Services\CarBookingService())->delete($record);
+                        if (!$response->success) {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Error deleting booking')
+                                ->body($response->message)
+                                ->danger()
+                                ->send();
+                        } else {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Booking deleted successfully')
+                                ->success()
+                                ->send();
+                        }
+                    }),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([

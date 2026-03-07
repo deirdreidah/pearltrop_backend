@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PlaceResource\Pages;
-use App\Models\Place;
+use App\Filament\Resources\AccommodationResource\Pages;
+use App\Models\Accommodation;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -12,11 +12,11 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Actions;
 
-class PlaceResource extends Resource
+class AccommodationResource extends Resource
 {
-    protected static ?string $model = Place::class;
+    protected static ?string $model = Accommodation::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-map-pin';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-home-modern';
 
     protected static string | \UnitEnum | null $navigationGroup = 'Destination Management';
 
@@ -24,7 +24,7 @@ class PlaceResource extends Resource
     {
         return $form
             ->schema([
-                Schemas\Section::make('Place Details')
+                Schemas\Section::make('Accommodation Details')
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->required()
@@ -41,7 +41,7 @@ class PlaceResource extends Resource
                             ]),
                         Forms\Components\FileUpload::make('image_path')
                             ->image()
-                            ->directory('places')
+                            ->directory('accommodations')
                             ->label('Image')
                             ->columnSpanFull(),
                         Forms\Components\Textarea::make('description')
@@ -79,9 +79,26 @@ class PlaceResource extends Resource
                     ]),
             ])
             ->actions([
-                Actions\ViewAction::make()->iconButton()->tooltip('View Place'),
-                Actions\EditAction::make()->iconButton()->tooltip('Edit Place'),
-                Actions\DeleteAction::make()->iconButton()->tooltip('Delete Place'),
+                Actions\ViewAction::make()->iconButton()->tooltip('View Accommodation'),
+                Actions\EditAction::make()->iconButton()->tooltip('Edit Accommodation'),
+                Actions\DeleteAction::make()
+                    ->iconButton()
+                    ->tooltip('Delete Accommodation')
+                    ->action(function (\App\Models\Accommodation $record) {
+                        $response = (new \App\Services\AccommodationService())->delete($record);
+                        if (!$response->success) {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Error deleting accommodation')
+                                ->body($response->message)
+                                ->danger()
+                                ->send();
+                        } else {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Accommodation deleted successfully')
+                                ->success()
+                                ->send();
+                        }
+                    }),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
@@ -93,9 +110,9 @@ class PlaceResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPlaces::route('/'),
-            'create' => Pages\CreatePlace::route('/create'),
-            'edit' => Pages\EditPlace::route('/{record}/edit'),
+            'index' => Pages\ListAccommodations::route('/'),
+            'create' => Pages\CreateAccommodation::route('/create'),
+            'edit' => Pages\EditAccommodation::route('/{record}/edit'),
         ];
     }
 }

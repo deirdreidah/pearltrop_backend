@@ -14,7 +14,7 @@ class CarFactory extends Factory
             'model' => $this->faker->word(),
             'year' => $this->faker->numberBetween(2015, 2024),
             'description' => $this->faker->paragraph(),
-            'price_per_day' => $this->faker->randomFloat(2, 50, 500),
+            'price_per_day' => $this->faker->numberBetween(150000, 800000),
             'is_available' => $this->faker->boolean(80),
         ];
     }

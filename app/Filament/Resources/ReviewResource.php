@@ -30,8 +30,8 @@ class ReviewResource extends Resource
                             ->relationship('user', 'name')
                             ->searchable()
                             ->required(),
-                        Forms\Components\Select::make('place_id')
-                            ->relationship('place', 'name')
+                        Forms\Components\Select::make('accommodation_id')
+                            ->relationship('accommodation', 'name')
                             ->searchable()
                             ->required(),
                         Forms\Components\TextInput::make('rating')
@@ -52,7 +52,7 @@ class ReviewResource extends Resource
                 Tables\Columns\TextColumn::make('user.name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('place.name')
+                Tables\Columns\TextColumn::make('accommodation.name')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('rating')
@@ -75,7 +75,24 @@ class ReviewResource extends Resource
             ])
             ->actions([
                 Actions\ViewAction::make()->iconButton()->tooltip('View Review'),
-                Actions\DeleteAction::make()->iconButton()->tooltip('Delete Review'),
+                Actions\DeleteAction::make()
+                    ->iconButton()
+                    ->tooltip('Delete Review')
+                    ->action(function (Review $record) {
+                        $response = (new \App\Services\ReviewService())->delete($record);
+                        if (!$response->success) {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Error deleting review')
+                                ->body($response->message)
+                                ->danger()
+                                ->send();
+                        } else {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Review deleted successfully')
+                                ->success()
+                                ->send();
+                        }
+                    }),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([

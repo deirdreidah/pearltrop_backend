@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\CarBookingResource\Pages;
+namespace App\Filament\Resources\AccommodationResource\Pages;
 
-use App\Filament\Resources\CarBookingResource;
+use App\Filament\Resources\AccommodationResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditCarBooking extends EditRecord
+class EditAccommodation extends EditRecord
 {
-    protected static string $resource = CarBookingResource::class;
+    protected static string $resource = AccommodationResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -19,10 +19,10 @@ class EditCarBooking extends EditRecord
 
     protected function handleRecordUpdate(\Illuminate\Database\Eloquent\Model $record, array $data): \Illuminate\Database\Eloquent\Model
     {
-        $response = (new \App\Services\CarBookingService())->update($record, $data);
+        $response = (new \App\Services\AccommodationService())->update($record, $data);
         if (!$response->success) {
             \Filament\Notifications\Notification::make()
-                ->title('Error updating booking')
+                ->title('Error updating accommodation')
                 ->body($response->message)
                 ->danger()
                 ->send();

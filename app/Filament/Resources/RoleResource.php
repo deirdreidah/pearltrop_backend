@@ -61,7 +61,24 @@ class RoleResource extends Resource
             ->actions([
                 Actions\ViewAction::make()->iconButton()->tooltip('View Role'),
                 Actions\EditAction::make()->iconButton()->tooltip('Edit Role'),
-                Actions\DeleteAction::make()->iconButton()->tooltip('Delete Role'),
+                Actions\DeleteAction::make()
+                    ->iconButton()
+                    ->tooltip('Delete Role')
+                    ->action(function (\App\Models\Role $record) {
+                        $response = (new \App\Services\RoleService())->delete($record);
+                        if (!$response->success) {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Error deleting role')
+                                ->body($response->message)
+                                ->danger()
+                                ->send();
+                        } else {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Role deleted successfully')
+                                ->success()
+                                ->send();
+                        }
+                    }),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([

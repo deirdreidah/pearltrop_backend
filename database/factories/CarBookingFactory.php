@@ -18,7 +18,7 @@ class CarBookingFactory extends Factory
             'car_id' => Car::all()->random()?->id ?? Car::factory(),
             'start_date' => $startDate,
             'end_date' => $endDate,
-            'total_price' => $this->faker->randomFloat(2, 200, 2000),
+            'total_price' => $this->faker->numberBetween(500000, 5000000),
             'status' => $this->faker->randomElement(['pending', 'confirmed', 'cancelled', 'completed']),
             'created_at' => $this->faker->dateTimeBetween('-6 months', 'now'),
         ];

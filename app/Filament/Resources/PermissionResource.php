@@ -56,7 +56,24 @@ class PermissionResource extends Resource
             ->actions([
                 Actions\ViewAction::make()->iconButton()->tooltip('View Permission'),
                 Actions\EditAction::make()->iconButton()->tooltip('Edit Permission'),
-                Actions\DeleteAction::make()->iconButton()->tooltip('Delete Permission'),
+                Actions\DeleteAction::make()
+                    ->iconButton()
+                    ->tooltip('Delete Permission')
+                    ->action(function (\App\Models\Permission $record) {
+                        $response = (new \App\Services\PermissionService())->delete($record);
+                        if (!$response->success) {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Error deleting permission')
+                                ->body($response->message)
+                                ->danger()
+                                ->send();
+                        } else {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Permission deleted successfully')
+                                ->success()
+                                ->send();
+                        }
+                    }),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([

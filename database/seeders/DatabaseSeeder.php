@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Car;
 use App\Models\CarBooking;
-use App\Models\Place;
+use App\Models\Accommodation;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
 
         // Dummy data
         Car::factory(10)->create();
-        Place::factory(5)->create();
+        Accommodation::factory(5)->create();
         
         // Random users for bookings and reviews
         User::factory(20)->create();

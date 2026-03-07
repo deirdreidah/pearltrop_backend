@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CarResource\Pages;
-use App\Models\Car;
+use App\Filament\Resources\TourCompanyResource\Pages;
+use App\Models\TourCompany;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -12,45 +12,43 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Actions;
 
-class CarResource extends Resource
+class TourCompanyResource extends Resource
 {
-    protected static ?string $model = Car::class;
+    protected static ?string $model = TourCompany::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-truck';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-office-2';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Fleet Management';
+    protected static string | \UnitEnum | null $navigationGroup = 'Tour Management';
 
     public static function form(Schema $form): Schema
     {
         return $form
             ->schema([
-                Schemas\Section::make('Car Details')
+                Schemas\Section::make('Basic Information')
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->maxLength(255),
-                        Forms\Components\TextInput::make('brand')
-                            ->required()
+                        Forms\Components\TextInput::make('email')
+                            ->email()
                             ->maxLength(255),
-                        Forms\Components\TextInput::make('model')
+                        Forms\Components\TextInput::make('phone')
                             ->required()
+                            ->tel()
                             ->maxLength(255),
-                        Forms\Components\TextInput::make('year')
-                            ->numeric()
-                            ->required(),
+                        Forms\Components\TextInput::make('website')
+                            ->url()
+                            ->maxLength(255),
                     ])->columns(2),
 
-                Schemas\Section::make('Pricing & Availability')
+                Schemas\Section::make('Address & Brand')
                     ->schema([
-                        Forms\Components\TextInput::make('price_per_day')
-                            ->numeric()
-                            ->prefix('UGX')
-                            ->required(),
-                        Forms\Components\Toggle::make('is_available')
-                            ->default(true),
-                        Forms\Components\FileUpload::make('image')
+                        Forms\Components\FileUpload::make('logo')
                             ->image()
-                            ->directory('cars')
+                            ->directory('tour-companies'),
+                        Forms\Components\Toggle::make('is_active')
+                            ->default(true),
+                        Forms\Components\Textarea::make('address')
                             ->columnSpanFull(),
                         Forms\Components\Textarea::make('description')
                             ->columnSpanFull(),
@@ -62,22 +60,16 @@ class CarResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('image')
+                Tables\Columns\ImageColumn::make('logo')
                     ->circular(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('brand')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('model')
+                Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('year')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('price_per_day')
-                    ->money('UGX')
-                    ->sortable(),
-                Tables\Columns\IconColumn::make('is_available')
+                Tables\Columns\TextColumn::make('phone')
+                    ->searchable(),
+                Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -85,25 +77,25 @@ class CarResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TernaryFilter::make('is_available'),
+                Tables\Filters\TernaryFilter::make('is_active'),
             ])
             ->actions([
-                Actions\ViewAction::make()->iconButton()->tooltip('View Car'),
-                Actions\EditAction::make()->iconButton()->tooltip('Edit Car'),
+                Actions\ViewAction::make()->iconButton()->tooltip('View Tour Company'),
+                Actions\EditAction::make()->iconButton()->tooltip('Edit Tour Company'),
                 Actions\DeleteAction::make()
                     ->iconButton()
-                    ->tooltip('Delete Car')
-                    ->action(function (Car $record) {
-                        $response = (new \App\Services\CarService())->delete($record);
+                    ->tooltip('Delete Tour Company')
+                    ->action(function (TourCompany $record) {
+                        $response = (new \App\Services\TourCompanyService())->delete($record);
                         if (!$response->success) {
                             \Filament\Notifications\Notification::make()
-                                ->title('Error deleting car')
+                                ->title('Error deleting tour company')
                                 ->body($response->message)
                                 ->danger()
                                 ->send();
                         } else {
                             \Filament\Notifications\Notification::make()
-                                ->title('Car deleted successfully')
+                                ->title('Tour company deleted successfully')
                                 ->success()
                                 ->send();
                         }
@@ -119,9 +111,10 @@ class CarResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCars::route('/'),
-            'create' => Pages\CreateCar::route('/create'),
-            'edit' => Pages\EditCar::route('/{record}/edit'),
+            'index' => Pages\ListTourCompanies::route('/'),
+            'create' => Pages\CreateTourCompany::route('/create'),
+            'view' => Pages\ViewTourCompany::route('/{record}'),
+            'edit' => Pages\EditTourCompany::route('/{record}/edit'),
         ];
     }
 }

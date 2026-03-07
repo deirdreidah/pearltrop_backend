@@ -29,7 +29,7 @@ class LatestBookings extends BaseWidget
                 Tables\Columns\TextColumn::make('car.name')
                     ->label('Car'),
                 Tables\Columns\TextColumn::make('total_price')
-                    ->money(),
+                    ->money('UGX'),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {

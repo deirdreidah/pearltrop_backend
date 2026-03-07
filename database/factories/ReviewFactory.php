@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Place;
+use App\Models\Accommodation;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -12,7 +12,7 @@ class ReviewFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'place_id' => Place::all()->random()?->id ?? Place::factory(),
+            'accommodation_id' => Accommodation::all()->random()?->id ?? Accommodation::factory(),
             'rating' => $this->faker->numberBetween(1, 5),
             'comment' => $this->faker->sentence(),
         ];
