@@ -29,6 +29,8 @@ class DefaultPermissionsSeeder extends Seeder
             'create-bookings',
             'edit-bookings',
             'delete-bookings',
+            'view-audit-trails',
+            'delete-audit-trails',
         ];
 
         foreach ($permissions as $permission) {

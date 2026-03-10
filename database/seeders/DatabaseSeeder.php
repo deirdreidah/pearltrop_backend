@@ -17,12 +17,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Admin user
-        User::updateOrCreate(
+        // 1. Roles & Permissions setup
+        $adminRole = \App\Models\Role::firstOrCreate(['name' => 'Super Admin']);
+        \App\Models\Role::firstOrCreate(['name' => 'Admin']);
+        \App\Models\Role::firstOrCreate(['name' => 'User']);
+
+        $this->call(DefaultPermissionsSeeder::class);
+        
+        // Assign all permissions to Super Admin role
+        $allPermissions = \App\Models\Permission::all();
+        $adminRole->permissions()->sync($allPermissions->pluck('id'));
+
+        // 2. Admin user
+        $admin = User::updateOrCreate(
             ['email' => 'admin@admin.com'],
             [
                 'name' => 'Admin User',
                 'password' => Hash::make('password'),
+                'role_id' => $adminRole->id,
             ]
         );
 
