@@ -93,6 +93,7 @@ class CarResource extends Resource
                 Actions\DeleteAction::make()
                     ->iconButton()
                     ->tooltip('Delete Car')
+                    ->requiresConfirmation()
                     ->action(function (Car $record) {
                         $response = (new \App\Services\CarService())->delete($record);
                         if (!$response->success) {
@@ -103,15 +104,18 @@ class CarResource extends Resource
                                 ->send();
                         } else {
                             \Filament\Notifications\Notification::make()
-                                ->title('Car deleted successfully')
+                                ->title("{$record->name} has been deleted successfully")
                                 ->success()
                                 ->send();
                         }
-                    }),
+                    })
+                    ->successNotification(null),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
-                    Actions\DeleteBulkAction::make(),
+                    Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->successNotificationTitle('Cars have been deleted successfully'),
                 ]),
             ]);
     }

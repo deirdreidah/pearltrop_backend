@@ -84,6 +84,7 @@ class AccommodationResource extends Resource
                 Actions\DeleteAction::make()
                     ->iconButton()
                     ->tooltip('Delete Accommodation')
+                    ->requiresConfirmation()
                     ->action(function (\App\Models\Accommodation $record) {
                         $response = (new \App\Services\AccommodationService())->delete($record);
                         if (!$response->success) {
@@ -94,15 +95,18 @@ class AccommodationResource extends Resource
                                 ->send();
                         } else {
                             \Filament\Notifications\Notification::make()
-                                ->title('Accommodation deleted successfully')
+                                ->title("{$record->name} has been deleted successfully")
                                 ->success()
                                 ->send();
                         }
-                    }),
+                    })
+                    ->successNotification(null),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
-                    Actions\DeleteBulkAction::make(),
+                    Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->successNotificationTitle('Accommodations have been deleted successfully'),
                 ]),
             ]);
     }

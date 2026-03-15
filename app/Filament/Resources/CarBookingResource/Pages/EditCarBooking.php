@@ -31,6 +31,11 @@ class EditCarBooking extends EditRecord
         return $response->data;
     }
 
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return "Booking #{$this->record->id} has been updated";
+    }
+
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

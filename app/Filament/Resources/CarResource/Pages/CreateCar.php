@@ -24,6 +24,11 @@ class CreateCar extends CreateRecord
         return $response->data;
     }
 
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return "{$this->record->name} has been created successfully";
+    }
+
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

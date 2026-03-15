@@ -15,6 +15,7 @@ class EditTourCompany extends EditRecord
         return [
             Actions\ViewAction::make(),
             Actions\DeleteAction::make()
+                ->requiresConfirmation()
                 ->action(function (\App\Models\TourCompany $record) {
                     $response = (new \App\Services\TourCompanyService())->delete($record);
                     if (!$response->success) {
@@ -25,12 +26,13 @@ class EditTourCompany extends EditRecord
                             ->send();
                     } else {
                         \Filament\Notifications\Notification::make()
-                            ->title('Tour company deleted successfully')
+                            ->title("{$record->name} has been deleted successfully")
                             ->success()
                             ->send();
                         $this->redirect($this->getResource()::getUrl('index'));
                     }
-                }),
+                })
+                ->successNotification(null),
         ];
     }
 
@@ -46,6 +48,11 @@ class EditTourCompany extends EditRecord
             $this->halt();
         }
         return $response->data;
+    }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return "{$this->record->name} has been updated";
     }
 
     protected function getRedirectUrl(): string

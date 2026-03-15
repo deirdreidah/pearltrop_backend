@@ -59,6 +59,7 @@ class PermissionResource extends Resource
                 Actions\DeleteAction::make()
                     ->iconButton()
                     ->tooltip('Delete Permission')
+                    ->requiresConfirmation()
                     ->action(function (\App\Models\Permission $record) {
                         $response = (new \App\Services\PermissionService())->delete($record);
                         if (!$response->success) {
@@ -69,15 +70,18 @@ class PermissionResource extends Resource
                                 ->send();
                         } else {
                             \Filament\Notifications\Notification::make()
-                                ->title('Permission deleted successfully')
+                                ->title("{$record->name} has been deleted successfully")
                                 ->success()
                                 ->send();
                         }
-                    }),
+                    })
+                    ->successNotification(null),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
-                    Actions\DeleteBulkAction::make(),
+                    Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->successNotificationTitle('Permissions have been deleted successfully'),
                 ]),
             ]);
     }

@@ -24,6 +24,11 @@ class CreateCarBooking extends CreateRecord
         return $response->data;
     }
 
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return "Booking #{$this->record->id} has been created successfully";
+    }
+
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

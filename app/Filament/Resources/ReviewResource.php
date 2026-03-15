@@ -78,6 +78,7 @@ class ReviewResource extends Resource
                 Actions\DeleteAction::make()
                     ->iconButton()
                     ->tooltip('Delete Review')
+                    ->requiresConfirmation()
                     ->action(function (Review $record) {
                         $response = (new \App\Services\ReviewService())->delete($record);
                         if (!$response->success) {
@@ -88,15 +89,18 @@ class ReviewResource extends Resource
                                 ->send();
                         } else {
                             \Filament\Notifications\Notification::make()
-                                ->title('Review deleted successfully')
+                                ->title("Review by {$record->user->name} has been deleted successfully")
                                 ->success()
                                 ->send();
                         }
-                    }),
+                    })
+                    ->successNotification(null),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
-                    Actions\DeleteBulkAction::make(),
+                    Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->successNotificationTitle('Reviews have been deleted successfully'),
                 ]),
             ]);
     }

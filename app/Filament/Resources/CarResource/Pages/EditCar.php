@@ -31,6 +31,11 @@ class EditCar extends EditRecord
         return $response->data;
     }
 
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return "{$this->record->name} has been updated";
+    }
+
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

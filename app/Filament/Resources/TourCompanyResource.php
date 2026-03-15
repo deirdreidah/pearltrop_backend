@@ -85,6 +85,7 @@ class TourCompanyResource extends Resource
                 Actions\DeleteAction::make()
                     ->iconButton()
                     ->tooltip('Delete Tour Company')
+                    ->requiresConfirmation()
                     ->action(function (TourCompany $record) {
                         $response = (new \App\Services\TourCompanyService())->delete($record);
                         if (!$response->success) {
@@ -95,15 +96,18 @@ class TourCompanyResource extends Resource
                                 ->send();
                         } else {
                             \Filament\Notifications\Notification::make()
-                                ->title('Tour company deleted successfully')
+                                ->title("{$record->name} has been deleted successfully")
                                 ->success()
                                 ->send();
                         }
-                    }),
+                    })
+                    ->successNotification(null),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
-                    Actions\DeleteBulkAction::make(),
+                    Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->successNotificationTitle('Tour companies have been deleted successfully'),
                 ]),
             ]);
     }

@@ -106,6 +106,7 @@ class CarBookingResource extends Resource
                 Actions\DeleteAction::make()
                     ->iconButton()
                     ->tooltip('Delete Booking')
+                    ->requiresConfirmation()
                     ->action(function (CarBooking $record) {
                         $response = (new \App\Services\CarBookingService())->delete($record);
                         if (!$response->success) {
@@ -116,15 +117,18 @@ class CarBookingResource extends Resource
                                 ->send();
                         } else {
                             \Filament\Notifications\Notification::make()
-                                ->title('Booking deleted successfully')
+                                ->title("Booking #{$record->id} has been deleted successfully")
                                 ->success()
                                 ->send();
                         }
-                    }),
+                    })
+                    ->successNotification(null),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
-                    Actions\DeleteBulkAction::make(),
+                    Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->successNotificationTitle('Bookings have been deleted successfully'),
                 ]),
             ]);
     }

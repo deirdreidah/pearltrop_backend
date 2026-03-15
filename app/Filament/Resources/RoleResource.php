@@ -64,6 +64,7 @@ class RoleResource extends Resource
                 Actions\DeleteAction::make()
                     ->iconButton()
                     ->tooltip('Delete Role')
+                    ->requiresConfirmation()
                     ->action(function (\App\Models\Role $record) {
                         $response = (new \App\Services\RoleService())->delete($record);
                         if (!$response->success) {
@@ -74,15 +75,18 @@ class RoleResource extends Resource
                                 ->send();
                         } else {
                             \Filament\Notifications\Notification::make()
-                                ->title('Role deleted successfully')
+                                ->title("{$record->name} has been deleted successfully")
                                 ->success()
                                 ->send();
                         }
-                    }),
+                    })
+                    ->successNotification(null),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
-                    Actions\DeleteBulkAction::make(),
+                    Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->successNotificationTitle('Roles have been deleted successfully'),
                 ]),
             ]);
     }

@@ -77,6 +77,7 @@ class UserResource extends Resource
                 Actions\DeleteAction::make()
                     ->iconButton()
                     ->tooltip('Delete User')
+                    ->requiresConfirmation()
                     ->action(function (\App\Models\User $record) {
                         $response = (new \App\Services\UserService())->delete($record);
                         if (!$response->success) {
@@ -87,15 +88,18 @@ class UserResource extends Resource
                                 ->send();
                         } else {
                             \Filament\Notifications\Notification::make()
-                                ->title('User deleted successfully')
+                                ->title("{$record->name} has been deleted successfully")
                                 ->success()
                                 ->send();
                         }
-                    }),
+                    })
+                    ->successNotification(null),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
-                    Actions\DeleteBulkAction::make(),
+                    Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->successNotificationTitle('Users have been deleted successfully'),
                 ]),
             ]);
     }

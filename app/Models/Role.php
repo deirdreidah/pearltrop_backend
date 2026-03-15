@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
+    use \App\Traits\Auditable;
+
     protected $fillable = ['name'];
 
     public function users()

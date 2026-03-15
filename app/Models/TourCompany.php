@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class TourCompany extends Model
 {
     /** @use HasFactory<\Database\Factories\TourCompanyFactory> */
-    use HasFactory;
+    use HasFactory, \App\Traits\Auditable;
 
     protected $fillable = [
         'name',
