@@ -16,4 +16,15 @@ class ListCarBookings extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+
+    public function getTabs(): array
+    {
+        return [
+            'all' => \Filament\Schemas\Components\Tabs\Tab::make('All Bookings'),
+            'rent' => \Filament\Schemas\Components\Tabs\Tab::make('Car Rentals')
+                ->modifyQueryUsing(fn ($query) => $query->where('type', 'rent')),
+            'ride' => \Filament\Schemas\Components\Tabs\Tab::make('Ride Bookings')
+                ->modifyQueryUsing(fn ($query) => $query->where('type', 'ride')),
+        ];
+    }
 }

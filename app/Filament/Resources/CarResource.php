@@ -38,6 +38,7 @@ class CarResource extends Resource
                         Forms\Components\TextInput::make('year')
                             ->numeric()
                             ->required(),
+                        Forms\Components\ColorPicker::make('color'),
                     ])->columns(2),
 
                 Schemas\Section::make('Pricing & Availability')
@@ -74,6 +75,8 @@ class CarResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('year')
                     ->sortable(),
+                Tables\Columns\ColorColumn::make('color')
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('price_per_day')
                     ->money('UGX')
                     ->sortable(),
@@ -85,9 +88,23 @@ class CarResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TernaryFilter::make('is_available'),
+                Tables\Filters\TernaryFilter::make('is_available')
+                    ->label('Availability'),
+                Tables\Filters\SelectFilter::make('brand')
+                    ->options(fn () => Car::query()->distinct()->pluck('brand', 'brand')->toArray())
+                    ->searchable(),
             ])
             ->actions([
+                Actions\Action::make('toggleAvailability')
+                    ->label(fn (Car $record): string => $record->is_available ? 'Make Unavailable' : 'Make Available')
+                    ->icon(fn (Car $record): string => $record->is_available ? 'heroicon-o-x-circle' : 'heroicon-o-check-circle')
+                    ->color(fn (Car $record): string => $record->is_available ? 'danger' : 'success')
+                    ->iconButton()
+                    ->requiresConfirmation()
+                    ->modalHeading(fn (Car $record): string => $record->is_available ? 'Mark Car as Unavailable' : 'Mark Car as Available')
+                    ->modalDescription('Are you sure you want to change the availability status of this car?')
+                    ->action(fn (Car $record) => $record->update(['is_available' => !$record->is_available]))
+                    ->tooltip(fn (Car $record): string => $record->is_available ? 'Make Unavailable' : 'Make Available'),
                 Actions\ViewAction::make()->iconButton()->tooltip('View Car'),
                 Actions\EditAction::make()->iconButton()->tooltip('Edit Car'),
                 Actions\DeleteAction::make()

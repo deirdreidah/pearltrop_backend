@@ -26,6 +26,12 @@ class LatestBookings extends BaseWidget
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Customer'),
+                Tables\Columns\TextColumn::make('type')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'rent' => 'info',
+                        'ride' => 'success',
+                    }),
                 Tables\Columns\TextColumn::make('car.name')
                     ->label('Car'),
                 Tables\Columns\TextColumn::make('total_price')

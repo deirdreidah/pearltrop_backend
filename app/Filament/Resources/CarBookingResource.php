@@ -26,6 +26,14 @@ class CarBookingResource extends Resource
             ->schema([
                 Schemas\Section::make('Booking Information')
                     ->schema([
+                        Forms\Components\Select::make('type')
+                            ->options([
+                                'rent' => 'Car Rental',
+                                'ride' => 'Ride Booking',
+                            ])
+                            ->default('rent')
+                            ->required()
+                            ->live(),
                         Forms\Components\Select::make('user_id')
                             ->relationship('user', 'name')
                             ->searchable()
@@ -63,6 +71,17 @@ class CarBookingResource extends Resource
                     ->label('Customer')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('type')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'rent' => 'info',
+                        'ride' => 'success',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'rent' => 'Rental',
+                        'ride' => 'Ride',
+                    })
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('car.name')
                     ->searchable()
                     ->sortable(),
@@ -90,6 +109,11 @@ class CarBookingResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('type')
+                    ->options([
+                        'rent' => 'Rentals',
+                        'ride' => 'Rides',
+                    ]),
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
                         'pending' => 'Pending',
